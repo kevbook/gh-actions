@@ -1,0 +1,22 @@
+name: Create Promotion PR
+description: Creates a production promotion pull request
+inputs:
+  repoName:
+    description: Repository name
+    required: true
+  stagingBranch:
+    description: Staging branch name
+    required: true
+  prodBranch:
+    description: Production branch name
+    required: true
+
+runs:
+  using: composite
+  steps:
+    - if: github.event.pull_request.merged == true
+      name: Run Promotion Script
+      shell: bash
+      run: |
+        chmod +x script.sh
+        ./script.sh ${{ inputs.repoName }} ${{ inputs.stagingBranch }} ${{ inputs.prodBranch }}

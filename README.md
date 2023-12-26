@@ -14,7 +14,7 @@ Automatically creates pull requests for promoting changes from staging to the pr
 - Add a workflow file `.github/workflows/promotion-pr.yml` in your repository
 
 ```yaml
-name: Automatic PRs for staging ⮕ prod
+name: Automatic PRs for main ⮕ prod
 on:
   pull_request:
     branches: [main]
@@ -22,6 +22,7 @@ on:
 jobs:
   Create-Prod-Promotion-PR:
     runs-on: ubuntu-latest
+    # Action uses GitHub CLI requiring the below permissions
     permissions:
       pull-requests: write
       contents: write

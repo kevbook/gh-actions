@@ -10,7 +10,6 @@ inputs:
   prodBranch:
     description: "Production branch name"
     required: true
-
 runs:
   using: "composite"
   steps:

@@ -30,5 +30,7 @@ STAGING_PRS=$(gh pr list --state=open --repo=$REPO_NAME \
   --json number,title,updatedAt,author \
   --jq 'sort_by(.updatedAt) | reverse | .[] | "- #\(.number): \(.title) @\(.author.login)"')
 
+echo "STAGING_PRS: $STAGING_PRS"
+
 # Update the promotion PR
 gh pr edit $PROMOTION_PR --repo=$REPO_NAME --title="$PR_TITLE" --body="$PR_BODY$STAGING_PRS"

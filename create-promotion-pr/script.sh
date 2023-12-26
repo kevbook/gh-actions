@@ -17,7 +17,7 @@ PROMOTION_PR=$(gh pr list --state=open \
 if [ -z "$PROMOTION_PR" ]; then
   PROMOTION_PR=$(gh pr create --repo=$REPO_NAME \
     --base=$PROD_BRANCH --head=$STAGING_BRANCH \
-    --title=PR_TITLE --body="$PR_BODY")
+    --title="$PR_TITLE" --body="$PR_BODY")
 
   echo "PROMOTION_PR created: $PROMOTION_PR"
 else

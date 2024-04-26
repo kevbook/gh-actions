@@ -1,8 +1,9 @@
 # gh-actions
 
-You must enable workflow permissions on the organization level and then on the repository level.
+- When adding below GitHub Actions to a repo, we'll use [act](https://github.com/nektos/act) to test the Actions locally
+- You must enable workflow permissions on the organization level.
 
-> <img alt="image" width="800" src="https://github.com/pricelastic/gh-actions/assets/926720/faea32df-cf14-4435-9e27-2686836115f0">
+  > <img alt="image" width="800" src="https://github.com/pricelastic/gh-actions/assets/926720/faea32df-cf14-4435-9e27-2686836115f0">
 
 ---
 
@@ -32,7 +33,6 @@ jobs:
         with:
           stagingBranch: main
           prodBranch: prod
-          repoName: ${{ github.event.repository.full_name }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 ```

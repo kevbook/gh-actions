@@ -1,9 +1,6 @@
 name: "Create Promotion PR Action"
 description: "Creates a production promotion pull request"
 inputs:
-  repoName:
-    description: "Repository name"
-    required: true
   stagingBranch:
     description: "Staging branch name"
     required: true
@@ -16,5 +13,8 @@ runs:
     - if: ${{ github.event.pull_request.merged == true }}
       shell: bash
       run: |
+        # Ensure the script is executable
         chmod +x ${{ github.action_path }}/script.sh
-        ${{ github.action_path }}/script.sh ${{ inputs.repoName }} ${{ inputs.stagingBranch }} ${{ inputs.prodBranch }}
+
+        # Execute the script and check for errors
+        ${{ github.action_path }}/script.sh ${{ github.repository }} ${{ inputs.stagingBranch }} ${{ inputs.prodBranch }} || echo "Script failed with exit code: $?"

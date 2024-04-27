@@ -4,7 +4,7 @@
 
 1. [VSCode Plugin](https://marketplace.visualstudio.com/items?itemName=GitHub.vscode-github-actions)
 2. [Act](https://github.com/nektos/act) to test Github Actions locally
-   - https://github.com/nektos/act/issues/2239#issuecomment-1979819940
+   - Docker issue: https://github.com/nektos/act/issues/2239#issuecomment-1979819940
 3. You must enable workflow permissions on the organization level
 
    > <img alt="image" width="800" src="https://github.com/pricelastic/gh-actions/assets/926720/faea32df-cf14-4435-9e27-2686836115f0">

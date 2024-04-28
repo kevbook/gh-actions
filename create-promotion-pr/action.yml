@@ -1,14 +1,14 @@
-name: "Create Promotion PR Action"
-description: "Creates a production promotion pull request"
+name: Create Promotion PR Action
+description: Creates a production promotion pull request
 inputs:
   stagingBranch:
-    description: "Staging branch name"
+    description: Staging branch name
     required: true
   prodBranch:
-    description: "Production branch name"
+    description: Production branch name
     required: true
 runs:
-  using: "composite"
+  using: composite
   steps:
     - if: ${{ github.event.pull_request.merged == true }}
       shell: bash

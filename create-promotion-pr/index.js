@@ -14,10 +14,10 @@ module.exports = async function ({ github, context, core }) {
   const stagingBranch = core.getInput("stagingBranch");
   const prodBranch = core.getInput("prodBranch");
 
-  console.log("====>>>>", stagingBranch, prodBranch, owner, repo, process.env);
+  console.log("====>>>>", stagingBranch, prodBranch, owner, repo);
 
   // const graphql = github.graphql; // GraphQL client
-  const openPRs = await github.rest.pulls.get({ owner, repo, state: "open" });
+  const openPRs = await github.rest.pulls.get({ owner, repo });
 
   console.log(
     "====>>>>",

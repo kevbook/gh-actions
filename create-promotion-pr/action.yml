@@ -14,7 +14,7 @@ runs:
       uses: actions/github-script@v7
       with:
         script: |
-          console.log('===============', context)
+          console.log('===============',core.getInput("stagingBranch"),core.getInput("staging-Branch"))
           const scriptPath = process.env.GITHUB_ACTION_PATH + '/index.js';
           const script = require(scriptPath);
           await script({github, context, core});

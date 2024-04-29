@@ -1,0 +1,17 @@
+on:
+  pull_request:
+    branches: [main]
+    types: [closed]
+jobs:
+  Test:
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: write
+      contents: write
+      repository-projects: read
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./create-promotion-pr
+        with:
+          stagingBranch: main
+          prodBranch: prod

@@ -1,5 +1,5 @@
 name: Create Promotion PR Action
-description: Creates a production promotion pull request
+description: Creates a production promotion PR
 inputs:
   stagingBranch:
     description: Staging branch name

@@ -18,10 +18,5 @@ module.exports = async function ({ github, context, core }) {
 
   // const graphql = github.graphql; // GraphQL client
 
-  console.log(
-    "====================222222==============",
-    stagingBranch,
-    prodBranch,
-    github.context
-  );
+  console.log("====>>>>", stagingBranch, prodBranch, github.context);
 };

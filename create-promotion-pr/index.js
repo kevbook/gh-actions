@@ -1,8 +1,6 @@
 // module.exports = async ({ github, context, core }) => {
 //   const { SHA } = process.env;
 //   const commit = await github.rest.repos.getCommit({
-//     owner: context.repo.owner,
-//     repo: context.repo.repo,
 //     ref: `${SHA}`,
 //   });
 //   core.exportVariable("author", commit.data.commit.author.email);
@@ -17,12 +15,14 @@ module.exports = async function ({ github, context, core }) {
   const prodBranch = core.getInput("prodBranch");
 
   // const graphql = github.graphql; // GraphQL client
+  const openPRs = await github.rest.pulls.get({ owner, repo, state: "open" });
 
   console.log(
     "====>>>>",
     owner,
     repo,
     core.getInput,
-    core.getInput("stagingBranch")
+    core.getInput("stagingBranch"),
+    openPRs
   );
 };

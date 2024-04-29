@@ -10,7 +10,7 @@
 
 module.exports = async function ({ github, context, core }) {
   // Repo context
-  // const { owner, repo } = context.repo;
+  const { owner, repo } = context.repo;
 
   // Get inputs
   const stagingBranch = core.getInput("stagingBranch");
@@ -18,11 +18,5 @@ module.exports = async function ({ github, context, core }) {
 
   // const graphql = github.graphql; // GraphQL client
 
-  console.log(
-    "====>>>>",
-    github,
-    context.repo,
-    context.repository,
-    core.getInput
-  );
+  console.log("====>>>>", owner, repo, core.getInput);
 };

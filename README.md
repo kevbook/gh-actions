@@ -7,13 +7,13 @@ You must enable workflow permissions on the organization level
 ## Development and Local Testing
 
 1. [VSCode Plugin](https://marketplace.visualstudio.com/items?itemName=GitHub.vscode-github-actions)
-2. Update `.secrets` file with your GitHub token
-3. [Act](https://github.com/nektos/act) to test Github Actions locally
+2. [Act](https://github.com/nektos/act) to test Github Actions locally
    - Docker issue: https://github.com/nektos/act/issues/2239#issuecomment-1979819940
 
 ```shell
 # Test the action locally using act
-$ act --workflows=./tests/create-promotion-pr.yml \
+$ act --secret GITHUB_TOKEN=${GITHUB_TOKEN} \
+    --workflows=./tests/create-promotion-pr.yml \
     --eventpath=tests/pr-merged.json
 ```
 

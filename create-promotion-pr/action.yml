@@ -11,10 +11,8 @@ runs:
   using: composite
   steps:
     - if: ${{ github.event.pull_request.merged == true }}
-      shell: bash
-      run: |
-        # Ensure the script is executable
-        chmod +x ${{ github.action_path }}/script.sh
-
-        # Execute the script and check for errors
-        ${{ github.action_path }}/script.sh ${{ github.repository }} ${{ inputs.stagingBranch }} ${{ inputs.prodBranch }} || echo "Script failed with exit code: $?"
+      uses: actions/github-script@v7
+      with:
+        script: |
+          const script = require('./create-promotion-pr/index.js')
+          await script({github, context, core})

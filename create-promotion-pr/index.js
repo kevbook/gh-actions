@@ -18,5 +18,11 @@ module.exports = async function ({ github, context, core }) {
 
   // const graphql = github.graphql; // GraphQL client
 
-  console.log("====>>>>", owner, repo, core.getInput);
+  console.log(
+    "====>>>>",
+    owner,
+    repo,
+    core.getInput,
+    core.getInput("stagingBranch")
+  );
 };

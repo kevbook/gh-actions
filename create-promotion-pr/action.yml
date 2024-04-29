@@ -10,13 +10,11 @@ inputs:
 runs:
   using: composite
   steps:
-    - if: ${{ github.event.pull_request.merged == true }}
-      uses: actions/github-script@v7
+    # - if: ${{ github.event.pull_request.merged == true }}
+    - uses: actions/github-script@v7
       with:
         script: |
-          console.log('=========', process.env.INPUT_stagingBranch,
-          process.env.INPUT_STAGINGBRANCH,
-          core.getInput("stagingBranch"),core.getInput("staging-Branch"))
+          console.log('====', ${{ inputs.stagingBranch }}, core.getInput("stagingBranch"))
           const scriptPath = process.env.GITHUB_ACTION_PATH + '/index.js';
           const script = require(scriptPath);
           await script({github, context, core});

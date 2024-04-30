@@ -30961,38 +30961,38 @@ async function run() {
 
   // Create prod PR if none exists
   console.log(prs);
-  // if (prs?.length) {
-  //   core.info(`Prod promotion PR exists: #${prs.data[0].number}`);
-  // } else {
-  //   // Create prod branch if it doesn't exist (from oldest commit in staging)
-  //   const { data: commits } = await octokit.rest.repos.listCommits({
-  //     owner,
-  //     repo,
-  //     sha: stagingBranch,
-  //     per_page: 100,
-  //   });
+  if (prs?.length) {
+    _actions_core__WEBPACK_IMPORTED_MODULE_1__.info(`Prod promotion PR exists: #${prs.data[0].number}`);
+  } else {
+    // Create prod branch if it doesn't exist (from oldest commit in staging)
+    const { data: commits } = await octokit.rest.repos.listCommits({
+      owner,
+      repo,
+      sha: stagingBranch,
+      per_page: 100,
+    });
 
-  //   try {
-  //     // Fail safely if branch already exists
-  //     await octokit.rest.git.createRef({
-  //       owner,
-  //       repo,
-  //       ref: `refs/heads/${prodBranch}`,
-  //       sha: commits.pop().sha, // Last item
-  //     });
-  //   } catch (e) {}
+    try {
+      // Fail safely if branch already exists
+      await octokit.rest.git.createRef({
+        owner,
+        repo,
+        ref: `refs/heads/${prodBranch}`,
+        sha: commits.pop().sha, // Last item
+      });
+    } catch (e) {}
 
-  //   // Create prod PR
-  //   const { data: createdPR } = await octokit.rest.pulls.create({
-  //     owner,
-  //     repo,
-  //     title: `🚀 ${stagingBranch} ⮕ ${prodBranch}`,
-  //     head: stagingBranch,
-  //     base: prodBranch,
-  //     body: '## Prod Promotion PRs\n',
-  //   });
-  //   core.info(`Prod promotion PR created: #${createdPR.number}`);
-  // }
+    // Create prod PR
+    const { data: createdPR } = await octokit.rest.pulls.create({
+      owner,
+      repo,
+      title: `🚀 ${stagingBranch} ⮕ ${prodBranch}`,
+      head: stagingBranch,
+      base: prodBranch,
+      body: '## Prod Promotion PRs\n',
+    });
+    _actions_core__WEBPACK_IMPORTED_MODULE_1__.info(`Prod promotion PR created: #${createdPR.number}`);
+  }
 
   // } catch (error) {
   //   console.log(JSON.stringify(error));

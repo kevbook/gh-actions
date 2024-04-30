@@ -12,7 +12,7 @@ You must enable workflow permissions on the organization level
 
 ```shell
 # Test the action locally using act
-$ act --secret GITHUB_TOKEN=${GITHUB_TOKEN} \
+$ act --secret GITHUB_TOKEN \
     --workflows=./tests/create-promotion-pr.yml \
     --eventpath=tests/pr-merged.json
 ```
@@ -21,7 +21,7 @@ $ act --secret GITHUB_TOKEN=${GITHUB_TOKEN} \
 
 Automatically creates pull requests for promoting changes from staging to the production branch.
 
-- Uses [GitHub ToolKit](https://github.com/actions/toolkit/tree/master)
+- Uses [GitHub ToolKit](https://github.com/actions/toolkit)
 - Uses GitHub CLI to create a pull request
 - Add a workflow file `.github/workflows/promotion-pr.yml` in your repository
 
@@ -60,7 +60,8 @@ jobs:
 
 ## References
 
-1. https://github.com/sdras/awesome-actions
-2. https://github.com/actions/javascript-action
-3. https://github.com/docker/build-push-action
-4. https://github.com/softprops/action-gh-release
+1. https://github.com/actions/toolkit
+2. https://github.com/sdras/awesome-actions
+3. https://github.com/actions/javascript-action
+4. https://github.com/docker/build-push-action
+5. https://github.com/softprops/action-gh-release

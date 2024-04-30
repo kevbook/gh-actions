@@ -16,3 +16,5 @@ jobs:
         with:
           stagingBranch: main
           prodBranch: prod
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

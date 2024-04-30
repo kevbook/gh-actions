@@ -30936,23 +30936,28 @@ var __webpack_exports__ = {};
  */
 async function run() {
   try {
+    // Get inputs
+    const stagingBranch = _actions_core__WEBPACK_IMPORTED_MODULE_1__.getInput('stagingBranch');
+    const prodBranch = _actions_core__WEBPACK_IMPORTED_MODULE_1__.getInput('prodBranch');
+    _actions_core__WEBPACK_IMPORTED_MODULE_1__.info(`Staging branch: ${stagingBranch}`);
+    _actions_core__WEBPACK_IMPORTED_MODULE_1__.info(`Production branch: ${prodBranch}`);
+
     // Repo context
     const { owner, repo } = _actions_github__WEBPACK_IMPORTED_MODULE_0__.context.repo;
+    _actions_core__WEBPACK_IMPORTED_MODULE_1__.info(`Owner: ${owner}`);
+    _actions_core__WEBPACK_IMPORTED_MODULE_1__.info(`Repo: ${repo}`);
 
-    // Get inputs
-    const stagingBranch = _actions_core__WEBPACK_IMPORTED_MODULE_1__.getInput("stagingBranch");
-    const prodBranch = _actions_core__WEBPACK_IMPORTED_MODULE_1__.getInput("prodBranch");
+    // Rest client
+    // const token = core.getInput('github-token', { required: true });
+    const octokit = _actions_github__WEBPACK_IMPORTED_MODULE_0__.getOctokit({ auth: process.env.GITHUB_TOKEN });
+    console.log('=====================================');
+    console.log(`-${process.env.GITHUB_TOKEN}-------`);
 
-    console.log(
-      "=========================",
-      stagingBranch,
-      prodBranch,
-      owner,
-      repo
-    );
+    const result = await octokit.rest.users.getAuthenticated();
+    console.log(result.headers);
+    // const prs = await octokit.rest.pulls.list({ owner, repo, state: 'open', base: prodBranch });
 
-    // const octokit = github.getOctokit(myToken);
-    // const context = github.context;
+    // console.log('=========================', prs);
 
     // const { data: pullRequest } = await octokit.rest.pulls.get({
     //     owner: 'octokit',
@@ -30975,6 +30980,7 @@ async function run() {
     //   openPRs
     // );
   } catch (error) {
+    console.log(JSON.stringify(error));
     // Fail the workflow run if an error occurs
     if (error instanceof Error) _actions_core__WEBPACK_IMPORTED_MODULE_1__.setFailed(error.message);
   }

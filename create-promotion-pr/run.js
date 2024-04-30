@@ -2,8 +2,7 @@ import github from "@actions/github";
 import core from "@actions/core";
 
 /**
- * The main function for the action
- * @returns {Promise<void>} Resolves when the action is complete.
+ * Run function for the action
  */
 async function run() {
   try {

@@ -5,55 +5,70 @@ import core from '@actions/core';
  * Run function for the action
  */
 async function run() {
-  try {
-    // Get inputs
-    const stagingBranch = core.getInput('stagingBranch');
-    const prodBranch = core.getInput('prodBranch');
-    core.info(`Staging branch: ${stagingBranch}`);
-    core.info(`Production branch: ${prodBranch}`);
+  // try {
+  // Get inputs
+  const stagingBranch = core.getInput('stagingBranch');
+  const prodBranch = core.getInput('prodBranch');
+  core.info(`Staging branch: ${stagingBranch}`);
+  core.info(`Production branch: ${prodBranch}`);
 
-    // Repo context
-    const { owner, repo } = github.context.repo;
-    core.info(`Owner: ${owner}`);
-    core.info(`Repo: ${repo}`);
+  // Repo context
+  const { owner, repo } = github.context.repo;
+  core.info(`Owner: ${owner}`);
+  core.info(`Repo: ${repo}`);
 
-    // Rest client
-    // const token = core.getInput('github-token', { required: true });
-    const octokit = github.getOctokit({ auth: process.env.GITHUB_TOKEN });
-    console.log('=====================================');
-    console.log(`-${process.env.GITHUB_TOKEN}-------`);
+  // Rest client
+  const octokit = github.getOctokit(process.env.GITHUB_TOKEN);
+  const graphql = octokit.graphql; // GraphQL client
 
-    const result = await octokit.rest.users.getAuthenticated();
-    console.log(result.headers);
-    // const prs = await octokit.rest.pulls.list({ owner, repo, state: 'open', base: prodBranch });
+  // Check for existing promotion PR (prod branch)
+  const { prs } = await octokit.rest.pulls.list({
+    owner,
+    repo,
+    state: 'open',
+    head: `${owner}:${prodBranch}`,
+  });
 
-    // console.log('=========================', prs);
+  // Create prod PR if none exists
+  console.log(prs);
+  // if (prs?.length) {
+  //   core.info(`Prod promotion PR exists: #${prs.data[0].number}`);
+  // } else {
+  //   // Create prod branch if it doesn't exist (from oldest commit in staging)
+  //   const { data: commits } = await octokit.rest.repos.listCommits({
+  //     owner,
+  //     repo,
+  //     sha: stagingBranch,
+  //     per_page: 100,
+  //   });
 
-    // const { data: pullRequest } = await octokit.rest.pulls.get({
-    //     owner: 'octokit',
-    //     repo: 'rest.js',
-    //     pull_number: 123,
-    //     mediaType: {
-    //       format: 'diff'
-    //     }
-    // });
+  //   try {
+  //     // Fail safely if branch already exists
+  //     await octokit.rest.git.createRef({
+  //       owner,
+  //       repo,
+  //       ref: `refs/heads/${prodBranch}`,
+  //       sha: commits.pop().sha, // Last item
+  //     });
+  //   } catch (e) {}
 
-    // // const graphql = github.graphql; // GraphQL client
-    // const openPRs = await github.rest.pulls.get({ owner, repo });
+  //   // Create prod PR
+  //   const { data: createdPR } = await octokit.rest.pulls.create({
+  //     owner,
+  //     repo,
+  //     title: `🚀 ${stagingBranch} ⮕ ${prodBranch}`,
+  //     head: stagingBranch,
+  //     base: prodBranch,
+  //     body: '## Prod Promotion PRs\n',
+  //   });
+  //   core.info(`Prod promotion PR created: #${createdPR.number}`);
+  // }
 
-    // console.log(
-    //   "====>>>>",
-    //   owner,
-    //   repo,
-    //   core.getInput,
-    //   core.getInput("stagingBranch"),
-    //   openPRs
-    // );
-  } catch (error) {
-    console.log(JSON.stringify(error));
-    // Fail the workflow run if an error occurs
-    if (error instanceof Error) core.setFailed(error.message);
-  }
+  // } catch (error) {
+  //   console.log(JSON.stringify(error));
+  //   // Fail the workflow run if an error occurs
+  //   if (error instanceof Error) core.setFailed(error.message);
+  // }
 }
 
 run();

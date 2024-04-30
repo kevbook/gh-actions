@@ -16,6 +16,17 @@
     "@vercel/ncc": "^0.38.1",
     "prettier": "^3.2.5"
   },
+  "prettier": {
+    "printWidth": 100,
+    "tabWidth": 2,
+    "useTabs": false,
+    "semi": true,
+    "singleQuote": true,
+    "quoteProps": "as-needed",
+    "trailingComma": "es5",
+    "bracketSpacing": true,
+    "bracketSameLine": true
+  },
   "engines": {
     "node": "20.x"
   }

@@ -1,0 +1,22 @@
+{
+  "name": "create-promotion-pr",
+  "main": "dist/index.js",
+  "type": "module",
+  "scripts": {
+    "build": "ncc build run.js -o dist --source-map",
+    "dev": "pnpm run build --watch",
+    "format": "prettier --write .",
+    "format:check": "prettier --check ."
+  },
+  "dependencies": {
+    "@actions/core": "^1.10.1",
+    "@actions/github": "^6.0.0"
+  },
+  "devDependencies": {
+    "@vercel/ncc": "^0.38.1",
+    "prettier": "^3.2.5"
+  },
+  "engines": {
+    "node": "20.x"
+  }
+}

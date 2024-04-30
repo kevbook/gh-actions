@@ -1,3 +1,4 @@
+name: Test Create Promotion PR Action
 on:
   pull_request:
     branches: [main]

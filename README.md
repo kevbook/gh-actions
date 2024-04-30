@@ -21,8 +21,17 @@ $ act --secret GITHUB_TOKEN=${GITHUB_TOKEN} \
 
 Automatically creates pull requests for promoting changes from staging to the production branch.
 
+- Uses [GitHub ToolKit](https://github.com/actions/toolkit/tree/master)
 - Uses GitHub CLI to create a pull request
 - Add a workflow file `.github/workflows/promotion-pr.yml` in your repository
+
+```shell
+# Start the local server
+$ pnpm run dev
+
+# Create a local production build
+$ pnpm run build
+```
 
 ```yaml
 name: Automatic PRs for main ⮕ prod
@@ -46,3 +55,12 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 ```
+
+---
+
+## References
+
+1. https://github.com/sdras/awesome-actions
+2. https://github.com/actions/javascript-action
+3. https://github.com/docker/build-push-action
+4. https://github.com/softprops/action-gh-release

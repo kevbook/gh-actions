@@ -44,12 +44,13 @@ async function run() {
 
     try {
       // Fail safely if branch already exists
-      await octokit.rest.git.createRef({
+      const createdBranch = await octokit.rest.git.createRef({
         owner,
         repo,
         ref: `refs/heads/${prodBranch}`,
         sha: commits.pop().sha, // Last item
       });
+      core.info(`"${prodBranch}" branch created: #${createdBranch.number}`);
     } catch (e) {}
 
     // Create prod PR

@@ -30948,7 +30948,6 @@ async function run() {
 
   // Repo context
   const { owner, repo } = _actions_github__WEBPACK_IMPORTED_MODULE_0__.context.repo;
-  // const repo = 'edge-functions';
   _actions_core__WEBPACK_IMPORTED_MODULE_1__.info(`Owner: ${owner}`);
   _actions_core__WEBPACK_IMPORTED_MODULE_1__.info(`Repo: ${repo}`);
 
@@ -31006,11 +31005,14 @@ async function run() {
     repo,
     pull_number: prId,
   });
+  // core.debug(`Commits: ${JSON.stringify(commits)}`);
 
   // Build PR body
   // Format: "- {parent.id}: {message} @{author}"
   const commentsArr = commits.map(function (i) {
-    return `- ${i.parents[0]?.sha}: ${i.commit.message} @${i.author.login}`;
+    // Format multiline message to single line
+    const message = i.commit.message.replace(/\t+/g, '').replace(/(\r?\n)+/g, '. ');
+    return `- ${i.parents[0]?.sha}: ${message} @${i.author.login}`;
   });
   commentsArr.unshift('## Prod Promotion PRs\n');
 
@@ -31020,6 +31022,7 @@ async function run() {
     pull_number: prId,
     body: commentsArr.join('\n'),
   });
+  _actions_core__WEBPACK_IMPORTED_MODULE_1__.info(`Prod promotion PR body updated: #${prId}`);
 }
 
 run();

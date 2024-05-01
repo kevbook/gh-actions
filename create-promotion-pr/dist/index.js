@@ -30935,7 +30935,11 @@ var __webpack_exports__ = {};
  * Run function for the action
  */
 async function run() {
-  // try {
+  // Only run on merged PRs
+  if (_actions_github__WEBPACK_IMPORTED_MODULE_0__.context.payload.pull_request.merged !== true) {
+    return;
+  }
+
   // Get inputs
   const stagingBranch = _actions_core__WEBPACK_IMPORTED_MODULE_1__.getInput('stagingBranch');
   const prodBranch = _actions_core__WEBPACK_IMPORTED_MODULE_1__.getInput('prodBranch');
@@ -30944,25 +30948,26 @@ async function run() {
 
   // Repo context
   const { owner, repo } = _actions_github__WEBPACK_IMPORTED_MODULE_0__.context.repo;
+  // const repo = 'edge-functions';
   _actions_core__WEBPACK_IMPORTED_MODULE_1__.info(`Owner: ${owner}`);
   _actions_core__WEBPACK_IMPORTED_MODULE_1__.info(`Repo: ${repo}`);
 
   // Rest client
   const octokit = _actions_github__WEBPACK_IMPORTED_MODULE_0__.getOctokit(process.env.GITHUB_TOKEN);
-  const graphql = octokit.graphql; // GraphQL client
 
   // Check for existing promotion PR (prod branch)
-  const { prs } = await octokit.rest.pulls.list({
+  let prId;
+  const { data: prs } = await octokit.rest.pulls.list({
     owner,
     repo,
     state: 'open',
-    head: `${owner}:${prodBranch}`,
+    base: prodBranch,
   });
 
   // Create prod PR if none exists
-  console.log(prs);
   if (prs?.length) {
-    _actions_core__WEBPACK_IMPORTED_MODULE_1__.info(`Prod promotion PR exists: #${prs.data[0].number}`);
+    prId = prs[0].number;
+    _actions_core__WEBPACK_IMPORTED_MODULE_1__.info(`Prod promotion PR exists: #${prId}`);
   } else {
     // Create prod branch if it doesn't exist (from oldest commit in staging)
     const { data: commits } = await octokit.rest.repos.listCommits({
@@ -30990,16 +30995,31 @@ async function run() {
       title: `🚀 ${stagingBranch} ⮕ ${prodBranch}`,
       head: stagingBranch,
       base: prodBranch,
-      body: '## Prod Promotion PRs\n',
     });
-    _actions_core__WEBPACK_IMPORTED_MODULE_1__.info(`Prod promotion PR created: #${createdPR.number}`);
+    prId = createdPR.number;
+    _actions_core__WEBPACK_IMPORTED_MODULE_1__.info(`Prod promotion PR created: #${prId}`);
   }
 
-  // } catch (error) {
-  //   console.log(JSON.stringify(error));
-  //   // Fail the workflow run if an error occurs
-  //   if (error instanceof Error) core.setFailed(error.message);
-  // }
+  // Get commits for the PR
+  const { data: commits } = await octokit.rest.pulls.listCommits({
+    owner,
+    repo,
+    pull_number: prId,
+  });
+
+  // Build PR body
+  // Format: "- {parent.id}: {message} @{author}"
+  const commentsArr = commits.map(function (i) {
+    return `- ${i.parents[0]?.sha}: ${i.commit.message} @${i.author.login}`;
+  });
+  commentsArr.unshift('## Prod Promotion PRs\n');
+
+  await octokit.rest.pulls.update({
+    owner,
+    repo,
+    pull_number: prId,
+    body: commentsArr.join('\n'),
+  });
 }
 
 run();

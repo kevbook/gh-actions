@@ -1,5 +1,8 @@
 name: Test Create Promotion PR Action
 on:
+  # On push to main branch or PR closed event
+  push:
+    branches: [main]
   pull_request:
     branches: [main]
     types: [closed]

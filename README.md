@@ -37,6 +37,9 @@ $ pnpm run build
 # .github/workflows/promotion-pr.yml
 name: Automatic PRs for main ⮕ prod
 on:
+  # On push to main branch or PR closed event
+  push:
+    branches: [main]
   pull_request:
     branches: [main]
     types: [closed]

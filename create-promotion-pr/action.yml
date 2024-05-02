@@ -1,20 +1,12 @@
-name: "Create Promotion PR Action"
-description: "Creates a production promotion pull request"
+name: Create Promotion PR Action
+description: Creates a production promotion PR on merge
 inputs:
-  repoName:
-    description: "Repository name"
-    required: true
   stagingBranch:
-    description: "Staging branch name"
+    description: Staging branch name
     required: true
   prodBranch:
-    description: "Production branch name"
+    description: Production branch name
     required: true
 runs:
-  using: "composite"
-  steps:
-    - if: ${{ github.event.pull_request.merged == true }}
-      shell: bash
-      run: |
-        chmod +x ${{ github.action_path }}/script.sh
-        ${{ github.action_path }}/script.sh ${{ inputs.repoName }} ${{ inputs.stagingBranch }} ${{ inputs.prodBranch }}
+  using: node20
+  main: dist/index.js

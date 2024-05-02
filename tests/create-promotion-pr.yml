@@ -1,0 +1,19 @@
+name: Test Create Promotion PR Action
+on:
+  # On push to main branch or PR closed event
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+    types: [closed]
+jobs:
+  Test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./create-promotion-pr
+        with:
+          stagingBranch: main
+          prodBranch: prod
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

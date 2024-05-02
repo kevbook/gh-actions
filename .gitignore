@@ -7,6 +7,13 @@
 *.crt
 *.key
 
+# Build
+**/tmp/
+**/node_modules/
+**/.pnpm-store/
+**/.tsbuildinfo
+**/package-lock.json
+
 # MacOS
 .DS_Store
 .AppleDouble

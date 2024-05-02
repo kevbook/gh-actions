@@ -23,7 +23,7 @@ Automatically creates pull requests for promoting changes from staging to the pr
 
 - Uses [GitHub ToolKit](https://github.com/actions/toolkit)
 - Uses GitHub CLI to create a pull request
-- Add a workflow file `.github/workflows/promotion-pr.yml` in your repository
+- Add the below workflow file `.github/workflows/promotion-pr.yml` in your repository
 
 ```shell
 # Start the local server
@@ -34,6 +34,7 @@ $ pnpm run build
 ```
 
 ```yaml
+# .github/workflows/promotion-pr.yml
 name: Automatic PRs for main ⮕ prod
 on:
   pull_request:

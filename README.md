@@ -46,7 +46,7 @@ on:
 jobs:
   Create-Prod-Promotion-PR:
     runs-on: ubuntu-latest
-    # Action uses GitHub CLI requiring the below permissions
+    # Action uses GitHub API requiring the below permissions
     permissions:
       pull-requests: write
       contents: write

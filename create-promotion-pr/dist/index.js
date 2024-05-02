@@ -30951,7 +30951,7 @@ async function run() {
   _actions_core__WEBPACK_IMPORTED_MODULE_1__.info(`Owner: ${owner}`);
   _actions_core__WEBPACK_IMPORTED_MODULE_1__.info(`Repo: ${repo}`);
 
-  // Rest client
+  // Rest client instance
   const octokit = _actions_github__WEBPACK_IMPORTED_MODULE_0__.getOctokit(process.env.GITHUB_TOKEN);
 
   // Check for existing promotion PR (prod branch)
@@ -30968,7 +30968,7 @@ async function run() {
     prId = prs[0].number;
     _actions_core__WEBPACK_IMPORTED_MODULE_1__.info(`Prod promotion PR exists: #${prId}`);
   } else {
-    // Create prod branch if it doesn't exist (from oldest commit in staging)
+    // Pull the oldest commit on the staging branch
     const { data: commits } = await octokit.rest.repos.listCommits({
       owner,
       repo,
@@ -30976,6 +30976,7 @@ async function run() {
       per_page: 100,
     });
 
+    // Create prod branch if it doesn't exist (from oldest commit on staging)
     try {
       // Fail safely if branch already exists
       const createdBranch = await octokit.rest.git.createRef({
@@ -31007,13 +31008,13 @@ async function run() {
   });
   // core.debug(`Commits: ${JSON.stringify(commits)}`);
 
-  // Build PR body
-  // Format: "- {parent.id}: {message} @{author}"
+  // Build PR body, format: "- {parent.id}: {message} @{author}"
   const commentsArr = commits.map(function (i) {
-    // Format multiline message to single line
+    // Convert multiline message to single line
     const message = i.commit.message.replace(/\t+/g, '').replace(/(\r?\n)+/g, '. ');
     return `- ${i.parents[0]?.sha}: ${message} @${i.author.login}`;
   });
+  // Add title H2
   commentsArr.unshift('## Prod Promotion PRs\n');
 
   await octokit.rest.pulls.update({

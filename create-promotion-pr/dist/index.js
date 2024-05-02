@@ -30937,7 +30937,7 @@ var __webpack_exports__ = {};
 async function run() {
   // Only run on push to staging branch or PR merged
   if (!(_actions_github__WEBPACK_IMPORTED_MODULE_0__.context.eventName === 'push' || _actions_github__WEBPACK_IMPORTED_MODULE_0__.context.payload.pull_request?.merged)) {
-    _actions_core__WEBPACK_IMPORTED_MODULE_1__.info('Action did not meet criteria to run (push to staging branch or PR merged)');
+    _actions_core__WEBPACK_IMPORTED_MODULE_1__.error('Action did not meet criteria to run (push to staging branch or PR merged)');
     return;
   }
 

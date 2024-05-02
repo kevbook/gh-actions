@@ -7,7 +7,7 @@ import core from '@actions/core';
 async function run() {
   // Only run on push to staging branch or PR merged
   if (!(github.context.eventName === 'push' || github.context.payload.pull_request?.merged)) {
-    core.info('Action did not meet criteria to run (push to staging branch or PR merged)');
+    core.error('Action did not meet criteria to run (push to staging branch or PR merged)');
     return;
   }
 

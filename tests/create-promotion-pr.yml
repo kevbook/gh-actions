@@ -1,11 +1,8 @@
 name: Test Create Promotion PR Action
 on:
-  # On push to main branch or PR closed event
+  # On push to main branch (including PR closed)
   push:
     branches: [main]
-  pull_request:
-    branches: [main]
-    types: [closed]
 jobs:
   Test:
     runs-on: ubuntu-latest

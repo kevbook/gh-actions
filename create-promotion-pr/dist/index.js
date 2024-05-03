@@ -30935,17 +30935,18 @@ var __webpack_exports__ = {};
  * Run function for the action
  */
 async function run() {
-  // Only run on push to staging branch or PR merged
-  if (!(_actions_github__WEBPACK_IMPORTED_MODULE_0__.context.eventName === 'push' || _actions_github__WEBPACK_IMPORTED_MODULE_0__.context.payload.pull_request?.merged)) {
-    _actions_core__WEBPACK_IMPORTED_MODULE_1__.error('Action did not meet criteria to run (push to staging branch or PR merged)');
-    return;
-  }
-
   // Get inputs
   const stagingBranch = _actions_core__WEBPACK_IMPORTED_MODULE_1__.getInput('stagingBranch');
   const prodBranch = _actions_core__WEBPACK_IMPORTED_MODULE_1__.getInput('prodBranch');
   _actions_core__WEBPACK_IMPORTED_MODULE_1__.info(`Staging branch: ${stagingBranch}`);
   _actions_core__WEBPACK_IMPORTED_MODULE_1__.info(`Production branch: ${prodBranch}`);
+
+  // Check to only run on push to staging branch
+  if (!(_actions_github__WEBPACK_IMPORTED_MODULE_0__.context.eventName === 'push' && _actions_github__WEBPACK_IMPORTED_MODULE_0__.context.ref.endsWith(stagingBranch))) {
+    _actions_core__WEBPACK_IMPORTED_MODULE_1__.info(`github.context.ref: ${_actions_github__WEBPACK_IMPORTED_MODULE_0__.context.ref}`);
+    _actions_core__WEBPACK_IMPORTED_MODULE_1__.error('Action did not meet criteria to run (push to staging branch)');
+    return;
+  }
 
   // Repo context
   const { owner, repo } = _actions_github__WEBPACK_IMPORTED_MODULE_0__.context.repo;
@@ -30980,13 +30981,13 @@ async function run() {
     // Create prod branch if it doesn't exist (from oldest commit on staging)
     try {
       // Fail safely if branch already exists
-      const createdBranch = await octokit.rest.git.createRef({
+      const { data: createdBranch } = await octokit.rest.git.createRef({
         owner,
         repo,
         ref: `refs/heads/${prodBranch}`,
         sha: commits.pop().sha, // Last item
       });
-      _actions_core__WEBPACK_IMPORTED_MODULE_1__.info(`"${prodBranch}" branch created: #${createdBranch.number}`);
+      _actions_core__WEBPACK_IMPORTED_MODULE_1__.info(`"${prodBranch}" branch created: #${createdBranch.ref}`);
     } catch (e) {}
 
     // Create prod PR

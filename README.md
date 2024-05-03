@@ -13,8 +13,7 @@ You must enable workflow permissions on the organization level
 ```shell
 # Test the action locally using act
 $ act --secret GITHUB_TOKEN \
-    --workflows=./tests/create-promotion-pr.yml \
-    --eventpath=tests/pr-merged.json
+    --workflows=./tests/create-promotion-pr.yml push
 ```
 
 ## 1. Create Promotion PR
@@ -29,7 +28,7 @@ Automatically creates pull requests for promoting changes from staging to the pr
 # Start the local server
 $ pnpm run dev
 
-# Create a local production build
+# Create a production build before merging
 $ pnpm run build
 ```
 
@@ -37,12 +36,9 @@ $ pnpm run build
 # .github/workflows/promotion-pr.yml
 name: Automatic PRs for main ⮕ prod
 on:
-  # On push to main branch or PR closed event
+  # On push to main branch (including PR closed)
   push:
     branches: [main]
-  pull_request:
-    branches: [main]
-    types: [closed]
 jobs:
   Create-Prod-Promotion-PR:
     runs-on: ubuntu-latest

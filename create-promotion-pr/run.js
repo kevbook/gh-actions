@@ -5,17 +5,18 @@ import core from '@actions/core';
  * Run function for the action
  */
 async function run() {
-  // Only run on push to staging branch or PR merged
-  if (!(github.context.eventName === 'push' || github.context.payload.pull_request?.merged)) {
-    core.error('Action did not meet criteria to run (push to staging branch or PR merged)');
-    return;
-  }
-
   // Get inputs
   const stagingBranch = core.getInput('stagingBranch');
   const prodBranch = core.getInput('prodBranch');
   core.info(`Staging branch: ${stagingBranch}`);
   core.info(`Production branch: ${prodBranch}`);
+
+  // Check to only run on push to staging branch
+  if (!(github.context.eventName === 'push' && github.context.ref.endsWith(stagingBranch))) {
+    core.info(`github.context.ref: ${github.context.ref}`);
+    core.error('Action did not meet criteria to run (push to staging branch)');
+    return;
+  }
 
   // Repo context
   const { owner, repo } = github.context.repo;
@@ -50,13 +51,13 @@ async function run() {
     // Create prod branch if it doesn't exist (from oldest commit on staging)
     try {
       // Fail safely if branch already exists
-      const createdBranch = await octokit.rest.git.createRef({
+      const { data: createdBranch } = await octokit.rest.git.createRef({
         owner,
         repo,
         ref: `refs/heads/${prodBranch}`,
         sha: commits.pop().sha, // Last item
       });
-      core.info(`"${prodBranch}" branch created: #${createdBranch.number}`);
+      core.info(`"${prodBranch}" branch created: #${createdBranch.ref}`);
     } catch (e) {}
 
     // Create prod PR

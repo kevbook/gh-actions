@@ -27934,7 +27934,7 @@ async function run() {
   const secretsFile = core.getInput('secretsFile');
   core.info(`secretsFile: ${secretsFile}`);
 
-  const { stdout, stderr } = await exec.getExecOutput('ls -la');
+  const { stdout, stderr } = await exec.getExecOutput('git version');
   console.log('stdout', stdout);
   console.error('stderr', stderr);
 

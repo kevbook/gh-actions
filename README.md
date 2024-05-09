@@ -29,7 +29,7 @@ $ act --secret GITHUB_TOKEN \
 
 $ act --secret GITHUB_TOKEN \
     --secret OP_SERVICE_ACCOUNT_TOKEN \
-    --workflows=./tests/ci-helper.yml push
+    --workflows=./tests/ci-helper.yml pull_request
 ```
 
 ## 1. Create Promotion PR

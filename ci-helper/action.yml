@@ -1,9 +1,6 @@
 name: Continuous integration helper
 description: Helper actions for continuous integration
 inputs:
-  commitMessage:
-    description: Commit message
-    default: ${{ github.event.pull_request.head.sha }}
   secretsFile:
     description: Secrets file
     default: secrets.yaml

@@ -1,0 +1,12 @@
+name: Continuous integration helper
+description: Helper actions for continuous integration
+inputs:
+  secretsFile:
+    description: Secrets file
+    default: secrets.yaml
+outputs:
+  skip_deploy:
+    description: Check if the commit message contains (1=skip, 0=deploy)
+runs:
+  using: node20
+  main: dist/index.js

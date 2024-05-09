@@ -1,0 +1,35 @@
+# Keys
+*.pem
+*.env
+*.env.*
+!*.env.sample
+*.aws
+*.crt
+*.key
+
+# Build
+**/tmp/
+**/node_modules/
+**/.pnpm-store/
+**/.tsbuildinfo
+**/package-lock.json
+
+# MacOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Logs
+logs/
+*.log
+
+# Runtime data
+pids
+*.pid
+*.seed
+*.pid.lock
+
+# IDEs
+.idea/
+.vscode/
+*.iml

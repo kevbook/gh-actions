@@ -1,0 +1,12 @@
+name: Create promotion PR action
+description: Creates a production promotion PR on merge
+inputs:
+  stagingBranch:
+    description: Staging branch name
+    required: true
+  prodBranch:
+    description: Production branch name
+    required: true
+runs:
+  using: node20
+  main: dist/index.js

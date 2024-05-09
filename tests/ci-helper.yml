@@ -1,0 +1,34 @@
+name: Test create promotion PR action
+on:
+  # On push to main branch (including PR closed)
+  push:
+    branches: [main]
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    # Since we're using op-secrets, we need to use the builder container
+    container:
+      image: ghcr.io/${{ github.repository_owner }}/builder:latest
+      env:
+        HUSKY: 0 # Disable husky hooks for CI environment
+        OP_SERVICE_ACCOUNT_TOKEN: ${{ secrets.OP_SERVICE_ACCOUNT_TOKEN }}
+    steps:
+      - uses: actions/checkout@v4
+
+      # Setup git for testing purposes
+      - run: |
+          git init
+          git config user.name "Example User"
+          git config user.email "user@example.com"
+          git commit --allow-empty -m "commit for testing [skip deploy]"
+
+      - uses: ./ci-helper
+        id: ci-helper
+        with:
+          secretsFile: tests/test-secrets.yaml
+
+      # Test environment variables and output
+      - run: |
+          echo "Skip deploy: ${{ steps.ci-helper.outputs.skip_deploy }}"
+          echo "ITEM_A: ${ITEM_A}"
+          echo "ITEM_B: ${ITEM_B}"

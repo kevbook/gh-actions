@@ -32195,6 +32195,8 @@ async function run() {
   const secretsFile = core.getInput('secretsFile');
   core.info(`secretsFile: ${secretsFile}`);
 
+  console.log(process.env);
+
   // Get commit message via REST client
   const octokit = github.getOctokit(process.env.GITHUB_TOKEN);
   const { data } = await octokit.rest.repos.getCommit({

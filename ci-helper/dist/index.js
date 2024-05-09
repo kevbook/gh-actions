@@ -27934,7 +27934,7 @@ async function run() {
   const secretsFile = core.getInput('secretsFile');
   core.info(`secretsFile: ${secretsFile}`);
 
-  const { stdout, stderr } = await exec.getExecOutput('git version');
+  const { stdout, stderr } = await exec.getExecOutput('git log -1 --pretty=oneline');
   console.log('stdout', stdout);
   console.error('stderr', stderr);
 

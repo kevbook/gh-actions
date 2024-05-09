@@ -9,21 +9,14 @@ jobs:
     # Since we're using op-secrets, we need to use the builder container
     container:
       image: ghcr.io/${{ github.repository_owner }}/builder:latest
-      env:
-        HUSKY: 0 # Disable husky hooks for CI environment
-        OP_SERVICE_ACCOUNT_TOKEN: ${{ secrets.OP_SERVICE_ACCOUNT_TOKEN }}
+
     steps:
       - uses: actions/checkout@v4
-
-      # Setup git for testing purposes
-      - run: |
-          git init
-          git config user.name "Example User"
-          git config user.email "user@example.com"
-          git commit --allow-empty -m "commit for testing [skip deploy]"
-
       - uses: ./ci-helper
         id: ci-helper
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          OP_SERVICE_ACCOUNT_TOKEN: ${{ secrets.OP_SERVICE_ACCOUNT_TOKEN }}
         with:
           secretsFile: tests/test-secrets.yaml
 

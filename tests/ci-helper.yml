@@ -11,7 +11,7 @@ jobs:
       image: ghcr.io/${{ github.repository_owner }}/builder:latest
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v4 # Needed locally only
       - uses: ./ci-helper
         id: ci-helper
         env:

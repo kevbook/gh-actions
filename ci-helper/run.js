@@ -16,7 +16,7 @@ async function run() {
   const secretsFile = core.getInput('secretsFile');
   core.info(`secretsFile: ${secretsFile}`);
 
-  console.log(process.env);
+  console.log('=======', core.getInput('commitMessage'));
 
   // Get commit message via REST client
   const octokit = github.getOctokit(process.env.GITHUB_TOKEN);

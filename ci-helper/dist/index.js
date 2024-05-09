@@ -32207,6 +32207,7 @@ async function run() {
   // https://github.com/orgs/vercel/discussions/60#discussioncomment-114386
   // https://samanpavel.medium.com/github-actions-output-parameters-f7de80922712
   const commitMessage = data.commit.message;
+  core.info(`Commit sha: ${data.sha}`);
   core.info(`Commit message: ${commitMessage}`);
   core.setOutput('skip_deploy', /\[skip deploy\]/i.test(commitMessage) ? '1' : '0');
 

@@ -49,18 +49,13 @@ on:
 jobs:
   create-prod-promotion-pr:
     runs-on: ubuntu-latest
-    # Action uses GitHub API requiring the below permissions
-    permissions:
-      pull-requests: write
-      contents: write
-      repository-projects: read
     steps:
       - uses: pricelastic/gh-actions/create-promotion-pr@main
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           stagingBranch: main
           prodBranch: prod
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 ```
 
 ---

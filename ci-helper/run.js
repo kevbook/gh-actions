@@ -21,8 +21,8 @@ async function run() {
   const { data } = await octokit.rest.repos.getCommit({
     owner: github.context.repo.owner,
     repo: github.context.repo.repo,
-    // Pull request head sha
-    ref: github.context.payload.pull_request.head.sha,
+    // Pull request head sha or commit sha
+    ref: github.context.payload.pull_request?.head?.sha || github.context.sha,
   });
 
   // Set skip deploy if commit message contains [skip deploy]

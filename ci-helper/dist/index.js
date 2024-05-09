@@ -32195,7 +32195,8 @@ async function run() {
   const secretsFile = core.getInput('secretsFile');
   core.info(`secretsFile: ${secretsFile}`);
 
-  console.log('=======', core.getInput('commitMessage'));
+  const prHeadSha = github.context.payload.pull_request.head.sha;
+  console.log('=======', core.getInput('commitMessage'), prHeadSha);
 
   // Get commit message via REST client
   const octokit = github.getOctokit(process.env.GITHUB_TOKEN);

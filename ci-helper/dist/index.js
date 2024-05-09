@@ -27934,7 +27934,7 @@ async function run() {
   const secretsFile = core.getInput('secretsFile');
   core.info(`secretsFile: ${secretsFile}`);
 
-  const { stdout, stderr } = await exec.getExecOutput('op-secrets -h');
+  const { stdout, stderr } = await exec.getExecOutput('ls -la');
   console.log('stdout', stdout);
   console.error('stderr', stderr);
 

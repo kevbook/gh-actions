@@ -27920,6 +27920,7 @@ var exec = __nccwpck_require__(7775);
 
 
 
+// import github from '@actions/github'
 
 /**
  * Run function for the action
@@ -27933,6 +27934,9 @@ async function run() {
   // Get inputs
   const secretsFile = core.getInput('secretsFile');
   core.info(`secretsFile: ${secretsFile}`);
+
+  console.log('========', process.env.GITHUB_WORKSPACE);
+  await exec.exec(`git config --add safe.directory ${process.env.GITHUB_WORKSPACE}`);
 
   const { stdout, stderr } = await exec.getExecOutput('git log -1 --pretty=oneline');
   console.log('stdout', stdout);

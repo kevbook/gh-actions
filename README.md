@@ -24,10 +24,12 @@ $ pnpm install && pnpm run dev
 $ pnpm run build
 
 # Test the action locally using act (from this directory)
-$ act --secret GITHUB_TOKEN \
+$ act -P ubuntu-latest=ghcr.io/catthehacker/ubuntu:act-latest \
+    --secret GITHUB_TOKEN \
     --workflows=./tests/create-promotion-pr.yml push
 
-$ act --secret GITHUB_TOKEN \
+$ act -P ubuntu-latest=ghcr.io/catthehacker/ubuntu:act-latest \
+    --secret GITHUB_TOKEN \
     --secret OP_SERVICE_ACCOUNT_TOKEN \
     --workflows=./tests/ci-helper.yml pull_request
 ```

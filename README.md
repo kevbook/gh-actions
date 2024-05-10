@@ -58,6 +58,65 @@ jobs:
           prodBranch: prod
 ```
 
+## 2. CI Helper
+
+```yaml
+name: Continuous integration
+on:
+  pull_request:
+    branches: [main] # $default-branch
+    # opened: When a new PR is created
+    # synchronize: When new commits are pushed to an existing PR
+    # reopened: When a previously closed PR is reopened
+    types: [opened, synchronize, reopened]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    container:
+      image: ghcr.io/${{ github.repository_owner }}/builder:latest
+    outputs:
+      SHORT_SHA: ${{ steps.ci-helper.outputs.short_sha }}
+      SKIP_DEPLOY: ${{ steps.ci-helper.outputs.skip_deploy }}
+    steps:
+      - uses: actions/checkout@v4 # Checkout the code
+
+      # CI-helper to load env vars (output: short_sha, skip_deploy)
+      - id: ci-helper
+        uses: pricelastic/gh-actions/ci-helper@feature/ci-helper
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          OP_SERVICE_ACCOUNT_TOKEN: ${{ secrets.OP_SERVICE_ACCOUNT_TOKEN }}
+
+      # Run prettier check & eslint and tests
+      - run: pnpm install
+      - run: pnpm run format:check
+      - run: pnpm run lint
+      - run: pnpm run test
+
+  build:
+    needs: test
+    if: needs.test.outputs.SKIP_DEPLOY == '0'
+    runs-on: ubuntu-latest
+    permissions:
+      packages: write
+    steps:
+      # - run: echo "🚀 Building docker image"
+      - uses: actions/checkout@v4 # Checkout the code
+      - uses: pricelastic/gh-actions/docker-setup@feature/ci-helper
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          ghcrUsername: ${{ github.actor }}
+
+      - uses: docker/build-push-action@v5
+        with:
+          context: .
+          tags: ghcr.io/${{ github.repository }}:${{ needs.test.outputs.SHORT_SHA }}
+          # platforms: linux/amd64,linux/arm64
+          push: true
+```
+
 ---
 
 ## References

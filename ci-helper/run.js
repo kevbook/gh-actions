@@ -1,7 +1,14 @@
 import { EOL } from 'node:os';
 import core from '@actions/core';
-import exec from '@actions/exec';
 import github from '@actions/github';
+import process from 'node:process';
+import util from 'node:util';
+import { exec as execNonPromise } from 'child_process';
+
+// Nodejs exec with await
+// Note: We don't use github actions exec because it prints the output
+// https://gist.github.com/miguelmota/e8fda506b764671745852c940cac4adb
+const exec = util.promisify(execNonPromise);
 
 /**
  * Run function for the action
@@ -33,9 +40,7 @@ async function run() {
   core.setOutput('skip_deploy', /\[skip deploy\]/i.test(commitMessage) ? '1' : '0');
 
   // Execute op-secrets command to get secrets
-  const { stdout, stderr } = await exec.getExecOutput(`op-secrets --config ${secretsFile} env`, {
-    silent: true,
-  });
+  const { stdout, stderr } = await exec(`op-secrets --config ${secretsFile} env`);
 
   if (stderr || stdout == undefined || stdout == '') {
     core.setFailed(stderr);

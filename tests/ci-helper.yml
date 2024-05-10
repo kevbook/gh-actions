@@ -22,6 +22,7 @@ jobs:
 
       # Test environment variables and output
       - run: |
+          echo "Short SHA: ${{ steps.ci-helper.outputs.short_sha }}"
           echo "Skip deploy: ${{ steps.ci-helper.outputs.skip_deploy }}"
           echo "ITEM_A: ${ITEM_A}"
           echo "ITEM_B: ${ITEM_B}"

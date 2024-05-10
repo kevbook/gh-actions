@@ -30965,13 +30965,18 @@ async function run() {
   const secretsFile = core.getInput('secretsFile');
   core.info(`secretsFile: ${secretsFile}`);
 
+  // Set ref SHA - pull request head sha or commit sha
+  const sha = github.context.payload.pull_request?.head?.sha || github.context.sha;
+  const shortSha = sha.slice(0, 7);
+  core.info(`SHA: ${sha}`);
+  core.setOutput('short_sha', shortSha);
+
   // Get commit message via REST client
   const octokit = github.getOctokit(external_node_process_namespaceObject.env.GITHUB_TOKEN);
   const { data } = await octokit.rest.repos.getCommit({
     owner: github.context.repo.owner,
     repo: github.context.repo.repo,
-    // Pull request head sha or commit sha
-    ref: github.context.payload.pull_request?.head?.sha || github.context.sha,
+    ref: sha,
   });
 
   // Set skip deploy if commit message contains [skip deploy]

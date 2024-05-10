@@ -5,6 +5,8 @@ inputs:
     description: Secrets file
     default: secrets.yaml
 outputs:
+  short_sha:
+    description: Short SHA of PR head sha or commit sha
   skip_deploy:
     description: Check if the commit message contains (1=skip, 0=deploy)
 runs:

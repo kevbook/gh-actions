@@ -11,7 +11,7 @@ runs:
       with:
         registry: ghcr.io
         username: ${{ inputs.ghcrUsername }}
-        password: ${{ secrets.GITHUB_TOKEN }}
+        password: ${{ env.GITHUB_TOKEN }}
 
     # Set up for multi-arch builds
     - uses: docker/setup-qemu-action@v3

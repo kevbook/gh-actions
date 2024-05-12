@@ -60,7 +60,7 @@ jobs:
           prodBranch: prod
 ```
 
-## 2. CI Helper
+## 2. CI Helper & Docker Setup
 
 ```yaml
 name: Continuous integration
@@ -85,7 +85,7 @@ jobs:
 
       # CI-helper to load env vars (output: short_sha, skip_deploy)
       - id: ci-helper
-        uses: pricelastic/gh-actions/ci-helper@feature/ci-helper
+        uses: pricelastic/gh-actions/ci-helper@main
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           OP_SERVICE_ACCOUNT_TOKEN: ${{ secrets.OP_SERVICE_ACCOUNT_TOKEN }}
@@ -105,7 +105,7 @@ jobs:
     steps:
       # - run: echo "🚀 Building docker image"
       - uses: actions/checkout@v4 # Checkout the code
-      - uses: pricelastic/gh-actions/docker-setup@feature/ci-helper
+      - uses: pricelastic/gh-actions/docker-setup@main
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:

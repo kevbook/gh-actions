@@ -7,10 +7,10 @@ jobs:
   test:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v4 # Needed locally only
       - uses: ./create-promotion-pr
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           stagingBranch: main
           prodBranch: prod
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

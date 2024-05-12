@@ -9,10 +9,8 @@ You must enable workflow permissions on the organization level
 Tooling for MacOS/Linux: https://github.com/pricelastic/infra
 
 ```shell
-# Install dependencies
+# Install dependencies & run prettier format
 $ pnpm install
-
-# Run prettier
 $ pnpm run format
 
 # Start the local server

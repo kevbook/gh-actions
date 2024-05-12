@@ -49,6 +49,11 @@ on:
 jobs:
   create-prod-promotion-pr:
     runs-on: ubuntu-latest
+    # Action uses GitHub API requiring the below permissions
+    permissions:
+      contents: write
+      pull-requests: write
+      repository-projects: read
     steps:
       - uses: pricelastic/gh-actions/create-promotion-pr@main
         env:

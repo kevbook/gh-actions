@@ -9,10 +9,8 @@ You must enable workflow permissions on the organization level
 Tooling for MacOS/Linux: https://github.com/pricelastic/infra
 
 ```shell
-# Install dependencies
+# Install dependencies & run prettier format
 $ pnpm install
-
-# Run prettier
 $ pnpm run format
 
 # Start the local server
@@ -51,6 +49,11 @@ on:
 jobs:
   create-prod-promotion-pr:
     runs-on: ubuntu-latest
+    # Action uses GitHub API requiring the below permissions
+    permissions:
+      contents: write
+      pull-requests: write
+      repository-projects: read
     steps:
       - uses: pricelastic/gh-actions/create-promotion-pr@main
         env:

@@ -4,6 +4,7 @@ import github from '@actions/github';
 import process from 'node:process';
 import util from 'node:util';
 import { exec as execNonPromise } from 'child_process';
+import Dotenv from 'dotenv';
 
 // Nodejs exec with await
 // Note: We don't use github actions exec because it prints the output
@@ -20,8 +21,8 @@ async function run() {
   }
 
   // Get inputs
-  const secretsFile = core.getInput('secretsFile');
-  core.info(`secretsFile: ${secretsFile}`);
+  const dotenvFile = core.getInput('dotenvFile');
+  core.info(`dotenvFile: ${dotenvFile}`);
 
   // Set ref SHA - pull request head sha or commit sha
   const sha = github.context.payload.pull_request?.head?.sha || github.context.sha;
@@ -44,23 +45,32 @@ async function run() {
   core.info(`Commit message: ${commitMessage}`);
   core.setOutput('skip_deploy', /\[skip deploy\]/i.test(commitMessage) ? '1' : '0');
 
-  // Execute op-secrets command to get secrets
-  const { stdout, stderr } = await exec(`op-secrets --config ${secretsFile} env`);
+  // Execute "op"command to get secrets
+  const { stdout, stderr } = await exec(`op run --no-masking --env-file=${dotenvFile} printenv`);
 
   if (stderr || stdout == undefined || stdout == '') {
     core.setFailed(stderr);
     return;
   }
 
+  // Load dotenvFile file to get keys
+  const content = Dotenv.config({ path: dotenvFile, processEnv: {} });
+  const dotEnvKeys = Object.keys(content.parsed ?? {});
+
+  // Parse the output of "op run" command
   const envs = stdout.replace(/\n+$/g, '').split(EOL);
+
   for (const env of envs) {
     const [envName, ...secretValueParts] = env.split('=');
-    // In case value contains more than one "="
-    const secretValue = secretValueParts.join('=');
 
-    // core.debug(`envName: ${envName}, secretValue: ${secretValue}`);
-    core.setSecret(secretValue);
-    core.exportVariable(envName, secretValue);
+    // Make sure envName occurs in the dotenv file
+    if (dotEnvKeys.includes(envName)) {
+      // In case value contains more than one "="
+      const secretValue = secretValueParts.join('=');
+      core.setSecret(secretValue); // Mask the secret
+      core.debug(`envName: ${envName}, secretValue: ${secretValue}`);
+      core.exportVariable(envName, secretValue);
+    }
   }
 }
 

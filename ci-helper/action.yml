@@ -1,9 +1,9 @@
 name: Continuous integration helper
 description: Helper actions for continuous integration
 inputs:
-  secretsFile:
-    description: Secrets file
-    default: secrets.yaml
+  dotenvFile:
+    description: Dotenv file
+    default: .env.sample
 outputs:
   short_sha:
     description: Short SHA of PR head sha or commit sha

@@ -11,8 +11,11 @@ async function run() {
   core.info(`Staging branch: ${stagingBranch}`);
   core.info(`Production branch: ${prodBranch}`);
 
-  // Check to only run on push to staging branch
-  if (!(github.context.eventName === 'push' && github.context.ref.endsWith(stagingBranch))) {
+  // Check to only run on push to staging branch, and manual trigger
+  if (
+    !(github.context.eventName === 'push' && github.context.ref.endsWith(stagingBranch)) &&
+    !(github.context.eventName === 'workflow_dispatch')
+  ) {
     core.info(`github.context.ref: ${github.context.ref}`);
     core.setFailed('Action did not meet criteria to run (push to staging branch)');
     return;

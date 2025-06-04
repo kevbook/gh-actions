@@ -6,7 +6,7 @@ on:
       printVariables:
         description: Print variables
         type: boolean
-        default: false
+        default: true
 
     outputs:
       COMMIT_SHA:

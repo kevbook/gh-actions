@@ -1,0 +1,83 @@
+name: Setup variables
+
+on:
+  workflow_call:
+    inputs:
+      printVariables:
+        description: Print variables
+        type: boolean
+        default: false
+
+    outputs:
+      COMMIT_SHA:
+        description: Full SHA of the triggering commit
+        value: ${{ jobs.setup_vars.outputs.COMMIT_SHA }}
+      PR_SHA:
+        description: Full SHA of the PR head (if applicable)
+        value: ${{ jobs.setup_vars.outputs.PR_SHA }}
+      FULL_SHA:
+        description: Resolved full SHA of the triggering commit or PR head
+        value: ${{ jobs.setup_vars.outputs.FULL_SHA }}
+      SHORT_SHA:
+        description: Resolved short SHA (7 chars) of the triggering commit or PR head
+        value: ${{ jobs.setup_vars.outputs.SHORT_SHA }}
+      COMMIT_MESSAGE:
+        description: Commit message of the triggering commit
+        value: ${{ jobs.setup_vars.outputs.COMMIT_MESSAGE }}
+      SKIP_TEST:
+        description: Whether to skip tests based on [skip test] commit message
+        value: ${{ jobs.setup_vars.outputs.SKIP_TEST }}
+
+jobs:
+  setup_vars:
+    runs-on: ubuntu-latest
+    outputs:
+      COMMIT_SHA: ${{ steps.setup.outputs.COMMIT_SHA }}
+      PR_SHA: ${{ steps.setup.outputs.PR_SHA }}
+      FULL_SHA: ${{ steps.setup.outputs.FULL_SHA }}
+      SHORT_SHA: ${{ steps.setup.outputs.SHORT_SHA }}
+      COMMIT_MESSAGE: ${{ steps.setup.outputs.COMMIT_MESSAGE }}
+      SKIP_TEST: ${{ steps.setup.outputs.SKIP_TEST }}
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - id: setup
+        name: Prepare variables
+        shell: bash
+        run: |
+          COMMIT_SHA=${{ github.sha }}
+          PR_SHA=${{ github.event.pull_request.head.sha }}
+
+          # SHA for the PR or fallback to the triggering commit
+          FULL_SHA="${PR_SHA:-$COMMIT_SHA}"
+          SHORT_SHA=$(echo "$FULL_SHA" | cut -c1-7)
+
+          COMMIT_MESSAGE=$(git log -1 --pretty=%B ${{ github.sha }})
+
+          SKIP_TEST="false"
+          if echo "$COMMIT_MESSAGE" | grep -q -i -F "[skip test]"; then
+            SKIP_TEST="true"
+          fi
+
+          # Set outputs
+          echo "COMMIT_SHA=$COMMIT_SHA" >> $GITHUB_OUTPUT
+          echo "PR_SHA=$PR_SHA" >> $GITHUB_OUTPUT
+          echo "FULL_SHA=$FULL_SHA" >> $GITHUB_OUTPUT
+          echo "SHORT_SHA=$SHORT_SHA" >> $GITHUB_OUTPUT
+          echo "COMMIT_MESSAGE=$COMMIT_MESSAGE" >> $GITHUB_OUTPUT
+          echo "SKIP_TEST=$SKIP_TEST" >> $GITHUB_OUTPUT
+
+      - name: Print variables
+        if: ${{ inputs.printVariables }}
+        run: |
+          echo "--- Setup Variables ---"
+          echo "COMMIT_SHA: ${{ steps.setup.outputs.COMMIT_SHA }}"
+          echo "PR_SHA: ${{ steps.setup.outputs.PR_SHA }}"
+          echo "FULL_SHA: ${{ steps.setup.outputs.FULL_SHA }}"
+          echo "SHORT_SHA: ${{ steps.setup.outputs.SHORT_SHA }}"
+          echo "COMMIT_MESSAGE: ${{ steps.setup.outputs.COMMIT_MESSAGE }}"
+          echo "SKIP_TEST: ${{ steps.setup.outputs.SKIP_TEST }}"
+          echo "-----------------------"

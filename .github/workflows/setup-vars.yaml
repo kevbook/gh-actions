@@ -55,7 +55,8 @@ jobs:
           FULL_SHA="${PR_SHA:-$COMMIT_SHA}"
           SHORT_SHA=$(echo "$FULL_SHA" | cut -c1-7)
 
-          COMMIT_MESSAGE=$(git log -1 --pretty=%B ${{ github.sha }})
+          # Commit message for the PR or fallback to the triggering commit
+          COMMIT_MESSAGE=$(git log -1 --pretty=%B $FULL_SHA)
 
           SKIP_TEST="false"
           if echo "$COMMIT_MESSAGE" | grep -q -i -F "[skip test]"; then
@@ -67,8 +68,9 @@ jobs:
           echo "PR_SHA=$PR_SHA" >> $GITHUB_OUTPUT
           echo "FULL_SHA=$FULL_SHA" >> $GITHUB_OUTPUT
           echo "SHORT_SHA=$SHORT_SHA" >> $GITHUB_OUTPUT
-          echo "COMMIT_MESSAGE=$COMMIT_MESSAGE" >> $GITHUB_OUTPUT
           echo "SKIP_TEST=$SKIP_TEST" >> $GITHUB_OUTPUT
+          # Note: Commit message is escaped for GitHub output using "printf"
+          printf "COMMIT_MESSAGE<<EOF\n%s\nEOF\n" "$COMMIT_MESSAGE" >> "$GITHUB_OUTPUT"
 
       - name: Print variables
         if: ${{ inputs.printVariables }}

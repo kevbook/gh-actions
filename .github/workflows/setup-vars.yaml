@@ -58,6 +58,7 @@ jobs:
           # Commit message for the PR or fallback to the triggering commit
           COMMIT_MESSAGE=$(git log -1 --pretty=%B $FULL_SHA)
 
+          # Matches: [skip test], [skip tests], [skip-test], [skip-tests]
           SKIP_TEST="false"
           if echo "$COMMIT_MESSAGE" | grep -q -i -E "\[skip[ -]?tests?\]"; then
             SKIP_TEST="true"

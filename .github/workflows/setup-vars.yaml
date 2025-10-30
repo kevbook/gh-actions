@@ -59,7 +59,7 @@ jobs:
           COMMIT_MESSAGE=$(git log -1 --pretty=%B $FULL_SHA)
 
           SKIP_TEST="false"
-          if echo "$COMMIT_MESSAGE" | grep -q -i -F "[skip test]"; then
+          if echo "$COMMIT_MESSAGE" | grep -q -i -E "\[skip[ -]?tests?\]"; then
             SKIP_TEST="true"
           fi
 
